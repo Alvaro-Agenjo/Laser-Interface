@@ -1,0 +1,6 @@
+-FIX desplazamiento con imagen mediante pntalla-
+-añadir representacion frente-
+-orden de procesos modificable-
+
+-test
+-profile
