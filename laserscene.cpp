@@ -9,7 +9,6 @@ void LaserScene::drawBackground(QPainter *painter, const QRectF &rect) {
     QGraphicsScene::drawBackground(painter, rect);
 
     const int gridSize = 10; // Graduación cada 10 unidades
-    const int limit = 220;
 
     // Configuración del estilo del grid
     QPen pen(Qt::lightGray, 0.5, Qt::DashLine);

@@ -5,7 +5,7 @@ LaserView::LaserView(QWidget *parent) : QGraphicsView(parent) {
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    scale(2, -2);
+    scale(1, -1);
 }
 
 void LaserView::wheelEvent(QWheelEvent *event) {

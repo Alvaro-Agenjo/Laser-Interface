@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->btn_addIMG->setIcon(QIcon(":/icons/data/IMG.png"));
     ui->btn_addIMG->setIconSize(QSize(30, 30));
     // Escena
-    scene = new LaserScene(-TableX*3, -TableY-3, TableX*3, TableY*3, this);
+    scene = new LaserScene(-2*TableX, -2*TableY, 4*TableX, 4*TableY, this);
     ui->escena->setScene(scene);
     ui->escena->centerOn(TableX/2, TableY/2);
 
