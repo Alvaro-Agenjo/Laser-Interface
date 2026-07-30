@@ -13,8 +13,8 @@ public:
 
     void setX(float x) override;
     void setY(float y) override;
-    void setLargo(float r1) override;
-    void setAlto(float r2) override;
+    void setLargo(float r1) override;   // r1 = largo
+    void setAlto(float r2) override;    // r2 = alto
     void setSize(float scale) override;
     void setLock(bool close) override;
     void setGraphics(Operacion operacion) override;

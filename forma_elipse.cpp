@@ -3,7 +3,7 @@
 #include <QGraphicsScene>
 
 
-Forma_elipse::Forma_elipse(float largo, float alto)  : Forma_Geometrica(largo, alto){
+Forma_elipse::Forma_elipse(float r1, float r2)  : Forma_Geometrica(r1, r2){
     _render = new QGraphicsEllipseItem(_x, _y, _largo, _alto);
     _render->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable
                       | QGraphicsItem::ItemSendsGeometryChanges);
@@ -32,15 +32,15 @@ void Forma_elipse::setY(float y) {
     _render->setY(_y);
 }
 
-void Forma_elipse::setLargo(float largo) {
+void Forma_elipse::setLargo(float r1) {
     if (_fixed) return;
-    _largo = largo;
+    _largo = r1;
     _render->setRect(0, 0, _largo, _alto);
 }
 
-void Forma_elipse::setAlto(float alto) {
+void Forma_elipse::setAlto(float r2) {
     if (_fixed) return;
-    _alto = alto;
+    _alto = r2;
     _render->setRect(0, 0, _largo, _alto);
 }
 
@@ -77,17 +77,26 @@ void Forma_elipse::setGraphics(Operacion operacion) {
 Camino Forma_elipse::getGcode(bool engrave, int densidad) const {
     Camino camino;
     if (engrave) {
+
+        // (x - esquinaX - r1)^2/r1^2 + (y - esquinay - r2)^2/r2^2 = 1;
+        // x = esquinax + r1 +- sqrt(r1^2 - ((y - esquinay - r2)^2 * r1^2/r2^2)));
         float paso = 1.0 / (float) densidad;
-        int max_linea = std::round(_alto * densidad);
+        int max_linea = std::round(_alto * 2 * densidad);
         for (int n = 0; n < max_linea + 1; n++) {
             float y = _y + (n * paso);
 
+            float x1, x2, raiz, parentesis;
+            parentesis = y - _y - _alto;
+            raiz = sqrt(pow(_largo, 2) - (pow(parentesis, 2) * pow(_largo, 2) / pow(_alto, 2)));
+
+            x1 = _x + _largo + raiz;
+            x2 = _x + _largo - raiz;
             if (n % 2) {
-                camino.append({{_x + _largo, y}, 0});
-                camino.append({{_x, y}, 255});
+                camino.append({{x2, y}, 0});
+                camino.append({{x1, y}, 255});
             } else {
-                camino.append({{_x, y}, 0});
-                camino.append({{_x + _largo, y}, 255});
+                camino.append({{x1, y}, 0});
+                camino.append({{x2, y}, 255});
             }
         }
     } else {
