@@ -100,11 +100,28 @@ Camino Forma_elipse::getGcode(bool engrave, int densidad) const {
             }
         }
     } else {
-        camino.append({{_x, _y}, 1});
-        camino.append({{_x + _largo, _y}, 255});
-        camino.append({{_x + _largo, _y + _alto}, 255});
-        camino.append({{_x, _y + _alto}, 255});
-        camino.append({{_x, _y}, 255});
+        // (x - esquinaX - r1)^2/r1^2 + (y - esquinay - r2)^2/r2^2 = 1;
+        // x = esquinax + r1 +- sqrt(r1^2 - ((y - esquinay - r2)^2 * r1^2/r2^2)));
+
+        densidad = 10;
+        float paso = 1.0 / (float) densidad;
+        int max_linea = std::round(_alto * 2 * densidad);
+
+        Camino c2;
+        for (int n = 0; n < max_linea + 1; n++) {
+            float y = _y + (n * paso);
+
+            float x1, x2, raiz, parentesis;
+            parentesis = y - _y - _alto;
+            raiz = sqrt(pow(_largo, 2) - (pow(parentesis, 2) * pow(_largo, 2) / pow(_alto, 2)));
+
+            x1 = _x + _largo + raiz;
+            x2 = _x + _largo - raiz;
+
+            camino.push_back({{x1, y}, 255});
+            c2.push_front({{x2, y}, 255});
+        }
+        camino.append(c2);
     }
 
     return camino;
