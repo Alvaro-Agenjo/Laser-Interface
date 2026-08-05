@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Lista de procesos
     ui->listWidget->setEditTriggers(QAbstractItemView::DoubleClicked
                                     | QAbstractItemView::SelectedClicked);
-    ui->listWidget->setIconSize(QSize(25, 25));
+    ui->listWidget->setIconSize(QSize(50, 25));
     ui->listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
 
@@ -619,7 +619,7 @@ void MainWindow::setLock(bool close) {
     QListWidgetItem *item
         = ui->listWidget->findItems(_proceso_actual->getProcessName(), Qt::MatchExactly).first();
 
-    close ? item->setIcon(QIcon(":/icons/data/close_lock")) : item->setIcon(QIcon(":/icons/data/open_lock"));
+    chooseIcon(item, _proceso_actual);
 }
 void MainWindow::enableOperacion(bool setTo) {
     ui->chck_invertir->setEnabled(setTo);
@@ -668,6 +668,16 @@ void MainWindow::clearProcess() {
         }
     }
 }
+
+void MainWindow::chooseIcon(QListWidgetItem *item, const Proceso *p) {
+    bool lock = p->getObjeto()->getLock(), show = p->getVisible();
+    if (lock)
+        show ? item->setIcon(QIcon(":/icons/data/close_show.png"))
+             : item->setIcon(QIcon(":/icons/data/close_dark.png"));
+    else
+        show ? item->setIcon(QIcon(":/icons/data/open_show.png"))
+             : item->setIcon(QIcon(":/icons/data/open_dark.png"));
+}
 void MainWindow::on_actionMostrar_perfiles_triggered() {
     PerfilesDlg perfil(this);
 
@@ -675,4 +685,12 @@ void MainWindow::on_actionMostrar_perfiles_triggered() {
     if (perfil.exec() == QDialog::Accepted) {
         aplicarPerfil(perfil.perfil());
     }
+}
+
+void MainWindow::on_btn_ocultar_clicked() {
+    _proceso_actual->toggleVisible();
+    auto items = ui->listWidget->findItems(_proceso_actual->getProcessName(), Qt::MatchExactly);
+    auto item = items.front();
+    chooseIcon(item, _proceso_actual);
+    _proceso_actual->getRender()->setVisible(_proceso_actual->getVisible());
 }

@@ -1,14 +1,16 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>data/close_lock.png</file>
         <file>data/gear.png</file>
-        <file>data/open_lock.png</file>
         <file>data/material.png</file>
         <file>data/objeto.png</file>
         <file>data/speed.png</file>
         <file>data/elipse.png</file>
         <file>data/IMG.png</file>
         <file>data/rectangulo.png</file>
+        <file>data/close_dark.png</file>
+        <file>data/close_show.png</file>
+        <file>data/open_dark.png</file>
+        <file>data/open_show.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>data/cut.png</file>

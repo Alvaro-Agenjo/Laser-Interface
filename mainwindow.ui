@@ -149,6 +149,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="btn_ocultar">
+            <property name="text">
+             <string>Ocultar</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>

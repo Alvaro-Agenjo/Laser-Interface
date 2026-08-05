@@ -22,6 +22,8 @@ public:
 
     inline void setObjeto(Forma* objeto)  { _objeto = objeto; }
     inline void setOperacion(Operacion operacion) {_modo = &operacion;}
+    inline void setVisible(bool visible) { _visible = visible; }
+    inline void toggleVisible() { _visible = !_visible; }
 
     inline QString getProcessName() const { return _nombre; };
     inline int getPasadas() const  { return _pasadas; }
@@ -31,14 +33,14 @@ public:
 
     inline Forma *getObjeto() const { return _objeto; }
     inline Operacion *getOperation() const { return _modo; }
-    inline QGraphicsItem* getRender() { return _objeto->getRender(); }
-
+    inline QGraphicsItem* getRender() const{ return _objeto->getRender(); }
+    inline bool getVisible() const { return _visible; }
 
     void updateGraphics();
     void updateOrientation();
     Camino getGcode() const;
 
-    inline bool EsTexto() { return _texto; }
+    inline bool EsTexto() const { return _texto; }
 
 private:
     int _potencia = 80;
@@ -46,6 +48,7 @@ private:
     int _velocidad = 1500;
 
     bool _texto;
+    bool _visible = true;
 
     Operacion *_modo;
     Forma *_objeto;

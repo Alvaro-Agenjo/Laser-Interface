@@ -3,6 +3,7 @@
 #include "operacion.h"
 #include "CONSTANTS.h"
 
+
 Forma_imagen::Forma_imagen() : Forma_compleja() {}
 
 Forma_imagen::Forma_imagen(const QString &filePath) : Forma_compleja() {
@@ -14,9 +15,9 @@ Forma_imagen::Forma_imagen(const QString &filePath) : Forma_compleja() {
 
 
     // Ajustar al maximo permitido para evitar calculos pesados (muchos pixeles)
-    _raw_pixmap = _raw_pixmap.scaled(std::min(TableX * maxDensity, _raw_pixmap.width()),
-                       std::min(TableY * maxDensity, _raw_pixmap.height()),
-                       Qt::AspectRatioMode::KeepAspectRatio);
+    _raw_pixmap = _raw_pixmap.scaled(std::min(static_cast<int>(TableX * maxDensity), _raw_pixmap.width()),
+                                     std::min(static_cast<int>(TableY * maxDensity), _raw_pixmap.height()),
+                                     Qt::AspectRatioMode::KeepAspectRatio);
     // Inicializar dimensiones desde la imagen
     _largo = _raw_pixmap.width();
     _alto = _raw_pixmap.height();

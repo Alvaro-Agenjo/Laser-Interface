@@ -106,6 +106,8 @@ private slots:
 
     void on_btn_addElipse_clicked();
 
+    void on_btn_ocultar_clicked();
+
 private:
     Ui::MainWindow *ui;
     QMenuBar *_menubar;
@@ -123,5 +125,6 @@ private:
     void enableOperacion(bool setTo);
     void aplicarPerfil(const PerfilMaterial &m);
     void clearProcess();
+    void chooseIcon(QListWidgetItem *item, const Proceso *p);
 };
 #endif // MAINWINDOW_H
