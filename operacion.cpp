@@ -1,4 +1,5 @@
 #include "operacion.h"
+#include "QJsonObject"
 
 Operacion::Operacion() {}
 
@@ -54,4 +55,41 @@ void Operacion::setContraste(int contraste) {
 void Operacion::setLvlgris(int lvlgris) {
     if (_modo != modo::GRIS) return;
     _lvlgris = lvlgris;
+}
+
+QJsonObject Operacion::save() const {
+    QJsonObject operacion;
+
+    operacion["original"] = _show_original;
+    operacion["invertir"] = _invert;
+    switch (_flip) {
+    case flip::NO_FLIP:
+        operacion["simetria"] = "none";
+    case flip::VERTICAL:
+        operacion["simetria"] = "vertical";
+    case flip::HORIZONTAL:
+        operacion["simetria"] = "horizontal";
+    case flip::BOTH:
+        operacion["simetria"] = "ambos";
+    }
+
+    switch (_modo) {
+    case modo::BLANCO_NEGRO:
+        operacion["modo"] = "blanco y negro";
+        operacion["umbral"] = _umbral;
+        operacion["densidad"] = _densidad;
+        return operacion;
+    case modo::GRIS:
+        operacion["modo"] = "gris";
+        operacion["brillo"] = _brillo;
+        operacion["contraste"] = _contraste;
+        operacion["lvl"] = _lvlgris;
+        operacion["densidad"] = _densidad;
+        return operacion;
+    case modo::VECTOR:
+        operacion["modo"] = "vector";
+        operacion["umbral"] = _umbral;
+        return operacion;
+
+    }
 }

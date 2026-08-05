@@ -13,6 +13,8 @@
 #include <QMessageBox>
 #include <QToolButton>
 
+#include <QJsonArray>
+
 
 static int counter = 0;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -678,6 +680,22 @@ void MainWindow::chooseIcon(QListWidgetItem *item, const Proceso *p) {
         show ? item->setIcon(QIcon(":/icons/data/open_show.png"))
              : item->setIcon(QIcon(":/icons/data/open_dark.png"));
 }
+
+void MainWindow::save() {
+    QJsonArray array;
+    QJsonObject proyecto;
+    proyecto["version"] = " 0.1.2";
+
+    for (const auto &p : _procesos) {
+        array.append(p->save());
+    }
+    proyecto["procesos"] = array;
+    QFile archivo(_savepath);
+    if (archivo.open(QIODevice::WriteOnly)) {
+        archivo.write(QJsonDocument(proyecto).toJson(QJsonDocument::Indented));
+        archivo.close();
+    }
+}
 void MainWindow::on_actionMostrar_perfiles_triggered() {
     PerfilesDlg perfil(this);
 
@@ -693,4 +711,87 @@ void MainWindow::on_btn_ocultar_clicked() {
     auto item = items.front();
     chooseIcon(item, _proceso_actual);
     _proceso_actual->getRender()->setVisible(_proceso_actual->getVisible());
+}
+
+void MainWindow::on_actionGuardar_proyecto_triggered() {
+    if (_savepath == "Nan") {
+        ui->actionGuardar_como->trigger();
+        return;
+    }
+    save();
+}
+
+void MainWindow::on_actionGuardar_como_triggered() {
+    QString fileName
+        = QFileDialog::getSaveFileName(this,
+                                       tr("Guardar proyecto"), // Título de la ventana
+                                       "", // Directorio por defecto (vacío = actual)
+                                       tr("Ag Laser (*.agl);;All Files (*)")); // Filtros de extensión
+
+    // 2. Verificar si el usuario canceló la operación (fileName estará vacío)
+    if (fileName.isEmpty()) return;
+    _savepath = fileName;
+    save();
+}
+
+void MainWindow::on_actionNuevo_proyecto_triggered() {
+    ui->actionBorrar_objetos->trigger();
+    _savepath = "Nan";
+}
+
+void MainWindow::on_actionAbir_proyecto_triggered() {
+    QString fileName
+        = QFileDialog::getOpenFileName(this,
+                                       "Abrir Espacio de Trabajo",
+                                       "",
+                                       "Archivos AgLaser (*.agl);;Todos los archivos (*.*)");
+    if (fileName.isEmpty()) return;
+
+    QFile archivo(fileName);
+    if (!archivo.open(QIODevice::ReadOnly)) return;
+
+    // Lectura del archivo
+    QJsonDocument documento = QJsonDocument::fromJson(archivo.readAll());
+    archivo.close();
+
+    // Verificacion de contenido
+    if (documento.isNull() || !documento.isObject()) return;
+
+
+    // Preparacion del escenario
+    _savepath = fileName;
+    clearProcess();
+
+    // Comprobación de versi´´on
+    QString version = documento["version"].toString();
+    auto split = version.split(".", Qt::SkipEmptyParts);
+    if (split[0].toInt() > VERSION)
+        QMessageBox::warning(this,
+                             "[ERROR]",
+                             "El archivo fue guardado en una versión más reciente que su programa, "
+                             "actualice el programa y vuelva a intentarlo.");
+    if (split[1].toInt() > ACTUALIZACION)
+        QMessageBox::warning(this,
+                             "[ERROR]",
+                             "El archivo fue guardado en una versión más reciente que su programa, "
+                             "actualice el programa y vuelva a intentarlo.");
+    if (split[2].toInt() > PARCHE)
+        QMessageBox::warning(this,
+                             "[ERROR]",
+                             "El archivo fue guardado en una versión más reciente que su programa, "
+                             "actualice el programa y vuelva a intentarlo.");
+
+    QJsonArray procesos = documento["procesos"].toArray();
+    for (int n = 0; n < procesos.size(); n++) {
+        QJsonObject proceso = procesos[n].toObject();
+        Proceso *p = new Proceso(proceso["nombre"].toString(),
+                                 proceso["potencia"].toInt(),
+                                 proceso["pasadas"].toInt(),
+                                 proceso["velocidad"].toInt(),
+                                 proceso["visible"].toBool());
+        p->load(proceso);
+        loadProcess(p);
+    }
+
+
 }

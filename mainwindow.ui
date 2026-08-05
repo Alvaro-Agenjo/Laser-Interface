@@ -1363,9 +1363,9 @@ QPushButton:pressed {
      <string>Objetos</string>
     </property>
     <addaction name="actionAbrir_imagen"/>
-    <addaction name="actionBorrar_objetos"/>
-    <addaction name="actionBorrar_selecci_n"/>
     <addaction name="actionDuplicar_objeto"/>
+    <addaction name="actionBorrar_selecci_n"/>
+    <addaction name="actionBorrar_objetos"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuMateriales">
@@ -1378,10 +1378,11 @@ QPushButton:pressed {
     <property name="title">
      <string>Proyecto</string>
     </property>
-    <addaction name="actionAbir_proyecto"/>
     <addaction name="actionNuevo_proyecto"/>
+    <addaction name="actionAbir_proyecto"/>
     <addaction name="actionGuardar_proyecto"/>
     <addaction name="actionGuardar_como"/>
+    <addaction name="actionGenerar_Gcode"/>
    </widget>
    <addaction name="menuProyecto"/>
    <addaction name="menuObjetos"/>
@@ -1506,6 +1507,11 @@ QPushButton:pressed {
   <action name="actionGuardar_como">
    <property name="text">
     <string>Guardar como</string>
+   </property>
+  </action>
+  <action name="actionGenerar_Gcode">
+   <property name="text">
+    <string>Generar Gcode</string>
    </property>
   </action>
  </widget>

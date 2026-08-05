@@ -22,6 +22,7 @@ public:
     virtual QGraphicsItem *getRender() const = 0;
     virtual Camino getGcode(bool engrave, int densidad) const = 0;
 
+    virtual QJsonObject save() const = 0;
 
 protected:
     QImage aplicarSobel(const QImage *img) const; //Sin uso

@@ -1,6 +1,7 @@
 #include "forma_rectangulo.h"
 #include "operacion.h"
 #include <QGraphicsScene>
+#include "QJsonObject"
 
 
 Forma_rectangulo::Forma_rectangulo(float largo, float alto)  : Forma_Geometrica(largo, alto){
@@ -99,4 +100,10 @@ Camino Forma_rectangulo::getGcode(bool engrave, int densidad) const {
     }
 
     return camino;
+}
+
+QJsonObject Forma_rectangulo::save() const {
+    QJsonObject forma;
+    forma["tipo"] = "rectangulo";
+    return Forma_Geometrica::save(forma);
 }

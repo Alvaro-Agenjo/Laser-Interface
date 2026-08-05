@@ -1,6 +1,7 @@
 #include "Forma_elipse.h"
 #include "operacion.h"
 #include <QGraphicsScene>
+#include "QJsonObject"
 
 
 Forma_elipse::Forma_elipse(float r1, float r2)  : Forma_Geometrica(r1, r2){
@@ -125,4 +126,10 @@ Camino Forma_elipse::getGcode(bool engrave, int densidad) const {
     }
 
     return camino;
+}
+
+QJsonObject Forma_elipse::save() const {
+    QJsonObject forma;
+    forma["tipo"] = "elipse";
+    return Forma_Geometrica::save(forma);
 }

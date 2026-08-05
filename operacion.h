@@ -1,5 +1,6 @@
 #ifndef OPERACION_H
 #define OPERACION_H
+#include "QJsonObject"
 
 enum class modo { BLANCO_NEGRO, GRIS, VECTOR };
 enum class flip { NO_FLIP, VERTICAL, HORIZONTAL, BOTH };
@@ -15,6 +16,7 @@ public:
     inline enum flip flip() const { return _flip; }
 
     void setModo(int modo);
+    // inline void setModo(enum smodo trabajo) { _modo = trabajo; };
     inline void setShow_original(bool show_original) { _show_original = show_original; }
     inline void setInvert(bool invert) { _invert = invert; }
     void setFlip(int flip);
@@ -36,6 +38,7 @@ public:
     void setContraste(int contraste);
     void setLvlgris(int lvlgris);
 
+    QJsonObject save() const;
 
 private:
     enum modo _modo = modo::BLANCO_NEGRO;

@@ -33,6 +33,8 @@ public:
     virtual QGraphicsItem *getRender() const = 0;
     virtual Camino getGcode(bool engrave, int densidad) const = 0;
 
+    virtual QJsonObject save() const = 0;
+
 protected:
     float _x = 0, _y = 0;
     float _largo, _alto;

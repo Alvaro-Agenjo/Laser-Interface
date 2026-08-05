@@ -108,6 +108,14 @@ private slots:
 
     void on_btn_ocultar_clicked();
 
+    void on_actionGuardar_proyecto_triggered();
+
+    void on_actionGuardar_como_triggered();
+
+    void on_actionNuevo_proyecto_triggered();
+
+    void on_actionAbir_proyecto_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMenuBar *_menubar;
@@ -117,6 +125,7 @@ private:
     Proceso *_proceso_actual;
 
     GCodeGenerator _gcode;
+    QString _savepath ="Nan";
     void loadProcess(Proceso *proceso);
     void loadProcessData(Proceso *proceso);
     void loadProcessOperation(Proceso *proceso, bool texto);
@@ -126,5 +135,8 @@ private:
     void aplicarPerfil(const PerfilMaterial &m);
     void clearProcess();
     void chooseIcon(QListWidgetItem *item, const Proceso *p);
+    void save();
+
+
 };
 #endif // MAINWINDOW_H

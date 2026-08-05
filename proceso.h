@@ -8,6 +8,7 @@
 
 class Proceso {
 public:
+    Proceso(QString nombre, int potencia, int pasadas, int velocidad, bool visible);
     Proceso(int num, bool texto);
     Proceso(int num, Factoria::Plano tipo, float x, float y, float l);
     Proceso(int num, Factoria::Plano tipo, float largo = 10, float _alto = 10);
@@ -41,6 +42,8 @@ public:
     Camino getGcode() const;
 
     inline bool EsTexto() const { return _texto; }
+    QJsonObject save();
+    void load(QJsonObject proceso);
 
 private:
     int _potencia = 80;

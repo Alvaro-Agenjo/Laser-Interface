@@ -1,6 +1,8 @@
 #include "forma_geometrica.h"
 #include "operacion.h"
 
+#include "QJsonObject"
+
 Forma_Geometrica::Forma_Geometrica(float largo, float alto)
     : Forma(largo, alto) {}
 
@@ -29,4 +31,13 @@ void Forma_Geometrica::setOrientation(Operacion operacion) {
     }
     transform.translate(-center.x(), -center.y());
     _render->setTransform(transform);
+}
+
+QJsonObject Forma_Geometrica::save(QJsonObject &obj) const {
+    obj["x"] = _x;
+    obj["y"] = _y;
+    obj["alto"] = _alto;
+    obj["largo"] = _largo;
+    obj["fijo"] = _fixed;
+    return obj;
 }
