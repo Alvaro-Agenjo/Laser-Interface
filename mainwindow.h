@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidgetItem>
+#include <QSpinBox>
 
 #include "laserscene.h"
 #include "proceso.h"
@@ -71,6 +72,7 @@ private slots:
     // Lista de procesos
     void CargarProceso(QListWidgetItem *item);
     void RenombrarProceso(QListWidgetItem *item);
+    // void RenombrarProceso(int row);
     void AjustarPrioridad();
     void MostrarMenu(const QPoint &pos);
 
@@ -103,17 +105,12 @@ private slots:
     void on_actionMostrar_perfiles_triggered();
 
     void on_actionAcuracy_Text_triggered();
-
     void on_btn_addElipse_clicked();
-
     void on_btn_ocultar_clicked();
 
     void on_actionGuardar_proyecto_triggered();
-
     void on_actionGuardar_como_triggered();
-
     void on_actionNuevo_proyecto_triggered();
-
     void on_actionAbir_proyecto_triggered();
 
 private:
@@ -130,6 +127,7 @@ private:
     void loadProcessData(Proceso *proceso);
     void loadProcessOperation(Proceso *proceso, bool texto);
 
+    void sliderBox(QSlider *sld, QSpinBox *box, int value);
     void setLock(bool close);
     void enableOperacion(bool setTo);
     void aplicarPerfil(const PerfilMaterial &m);

@@ -42,6 +42,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             this,
             &MainWindow::on_actionMostrar_perfiles_triggered);
 
+    // Operacion
+    connect(ui->num_bn_umbral, &QSpinBox::valueChanged, ui->sld_bn_umbral, &QSlider::valueChanged);
+    connect(ui->num_gray_brillo, &QSpinBox::valueChanged, ui->sld_gray_brillo, &QSlider::valueChanged);
+    connect(ui->num_gray_contraste, &QSpinBox::valueChanged, ui->sld_gray_contraste, &QSlider::valueChanged);
+    connect(ui->num_gray_lvl, &QSpinBox::valueChanged, ui->sld_gray_lvl, &QSlider::valueChanged);
+    connect(ui->num_vec_umbral, &QSpinBox::valueChanged, ui->sld_vec_umbral, &QSlider::valueChanged);
 
     // Lista de procesos
     ui->listWidget->setEditTriggers(QAbstractItemView::DoubleClicked
@@ -55,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->listWidget->setFont(fuente);
 
     connect(ui->listWidget, &QListWidget::itemClicked, this, &MainWindow::CargarProceso);
-    connect(ui->listWidget, &QListWidget::itemDoubleClicked, this, &MainWindow::RenombrarProceso);
+    connect(ui->listWidget, &QListWidget::itemChanged, this, &MainWindow::RenombrarProceso);
     connect(ui->listWidget->model(), &QAbstractItemModel::rowsMoved, this, &MainWindow::AjustarPrioridad);
     connect(ui->listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::MostrarMenu);
 
@@ -211,7 +217,7 @@ void MainWindow::on_sel_simetria_currentIndexChanged(int index) {
 }
 
 void MainWindow::on_sld_bn_umbral_valueChanged(int value) {
-    ui->num_bn_umbral->setValue(value);
+    sliderBox(ui->sld_bn_umbral, ui->num_bn_umbral, value);
     _proceso_actual->getOperation()->setUmbral(value);
     _proceso_actual->updateGraphics();
 }
@@ -220,17 +226,17 @@ void MainWindow::on_txt_bn_densidad_valueChanged(int arg1) {
 }
 
 void MainWindow::on_sld_gray_contraste_valueChanged(int value) {
-    ui->num_gray_contraste->setValue(value);
+    sliderBox(ui->sld_gray_contraste, ui->num_gray_contraste, value);
     _proceso_actual->getOperation()->setContraste(value);
     _proceso_actual->updateGraphics();
 }
 void MainWindow::on_sld_gray_brillo_valueChanged(int value) {
-    ui->num_gray_brillo->setValue(value);
+    sliderBox(ui->sld_gray_brillo, ui->num_gray_brillo, value);
     _proceso_actual->getOperation()->setBrillo(value);
     _proceso_actual->updateGraphics();
 }
 void MainWindow::on_sld_gray_lvl_valueChanged(int value) {
-    ui->num_gray_lvl->setValue(value);
+    sliderBox(ui->sld_gray_lvl, ui->num_gray_lvl, value);
     _proceso_actual->getOperation()->setLvlgris(value);
     _proceso_actual->updateGraphics();
 }
@@ -239,7 +245,7 @@ void MainWindow::on_txt_gray_densidad_valueChanged(int arg1) {
 }
 
 void MainWindow::on_sld_vec_umbral_valueChanged(int value) {
-    ui->num_vec_umbral->setValue(value);
+    sliderBox(ui->sld_vec_umbral, ui->num_vec_umbral, value);
     _proceso_actual->getOperation()->setUmbral(value);
     _proceso_actual->updateGraphics();
 }
@@ -300,6 +306,10 @@ void MainWindow::RenombrarProceso(QListWidgetItem *item) {
     int row = ui->listWidget->row(item);
     if (row >= 0 && row < _procesos.size()) _procesos[row]->setProcessName(item->text());
 }
+
+// void MainWindow::RenombrarProceso(int row) {
+//     _procesos[row]->setProcessName(ui->listWidget->item(row)->text());
+// }
 void MainWindow::AjustarPrioridad() {
     std::vector<Proceso *> nuevaLista;
     for (int n = 0; n < ui->listWidget->count(); n++) {
@@ -389,10 +399,10 @@ void MainWindow::on_btn_gcode_clicked() {
 void MainWindow::MovimientoDetectado(QGraphicsItem *item, QPointF pos) {
     for (Proceso *p : _procesos) {
         if (p->getRender() == item) {
-            // _proceso_actual = p;
-            QListWidgetItem *elem = ui->listWidget
-                                        ->findItems(p->getProcessName(), Qt::MatchFlag::MatchExactly)
-                                        .first();
+            _proceso_actual = p;
+            auto list = ui->listWidget->findItems(p->getProcessName(), Qt::MatchFlag::MatchExactly);
+            QListWidgetItem *elem = list.front();
+
             ui->listWidget->itemClicked(elem);
             ui->listWidget->setCurrentItem(elem);
             // Actualizas tus SpinBoxes
@@ -519,6 +529,7 @@ void MainWindow::loadProcess(Proceso *proceso) {
     QListWidgetItem *item = new QListWidgetItem(proceso->getProcessName());
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     ui->listWidget->addItem(item);
+    chooseIcon(item, _proceso_actual);
 
     loadProcessData(proceso);
 }
@@ -613,6 +624,17 @@ void MainWindow::loadProcessOperation(Proceso *proceso, bool texto) {
 
     proceso->updateGraphics();
     proceso->updateOrientation();
+}
+
+void MainWindow::sliderBox(QSlider *sld, QSpinBox *box, int value) {
+    sld->blockSignals(true);
+    box->blockSignals(true);
+
+    sld->setValue(value);
+    box->setValue(value);
+
+    sld->blockSignals(false);
+    box->blockSignals(false);
 }
 
 void MainWindow::setLock(bool close) {

@@ -125,6 +125,9 @@
             <height>35</height>
            </size>
           </property>
+          <property name="keyboardSearchFlags">
+           <set>Qt::MatchFlag::MatchExactly</set>
+          </property>
           <property name="supportedDragActions">
            <set>Qt::DropAction::MoveAction</set>
           </property>
@@ -176,7 +179,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="parametros">
            <property name="geometry">
@@ -594,7 +597,7 @@
                 <enum>QFrame::Shape::NoFrame</enum>
                </property>
                <property name="currentIndex">
-                <number>2</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="bn">
                 <widget class="QWidget" name="verticalLayoutWidget">
