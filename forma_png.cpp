@@ -1,5 +1,5 @@
 #include "forma_png.h"
-
+#include <QJsonObject>
 Forma_png::Forma_png() : Forma_imagen() {}
 
 Forma_png::Forma_png(const QString &filePath) : Forma_imagen(filePath) {
@@ -17,4 +17,11 @@ Forma_png::Forma_png(const QString &filePath) : Forma_imagen(filePath) {
 
     // 3. Volver a pasarlo a QPixmap para que _raw_pixmap ya guarde la imagen sin transparencias
     _raw_pixmap = QPixmap::fromImage(img);
+}
+
+QJsonObject Forma_png::save() const {
+    QJsonObject forma = Forma_imagen::save();
+    forma["tipo"] = "png";
+
+    return forma;
 }

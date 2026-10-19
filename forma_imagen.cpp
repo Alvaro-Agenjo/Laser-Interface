@@ -6,13 +6,12 @@
 
 Forma_imagen::Forma_imagen() : Forma_compleja() {}
 
-Forma_imagen::Forma_imagen(const QString &filePath) : Forma_compleja() {
+Forma_imagen::Forma_imagen(const QString &filePath) : Forma_compleja(), _ruta(filePath) {
     if (!_raw_pixmap.load(filePath)) {
         _x = -1;
         _raw_pixmap = QPixmap(10, 10);
         _raw_pixmap.fill(Qt::red);
     } // Carga JPG, PNG, BMP, etc. automáticamente
-
 
     // Ajustar al maximo permitido para evitar calculos pesados (muchos pixeles)
     _raw_pixmap = _raw_pixmap.scaled(std::min(static_cast<int>(TableX * maxDensity), _raw_pixmap.width()),
@@ -32,6 +31,7 @@ Forma_imagen::Forma_imagen(const QString &filePath) : Forma_compleja() {
 
 Forma *Forma_imagen::clone() const {
     Forma_imagen *f = new Forma_imagen();
+    f->_ruta = _ruta;
     f->_raw_pixmap = _raw_pixmap;
     f->_original_pixmap = _original_pixmap;
     f->_pixmap = _pixmap;
@@ -69,6 +69,19 @@ Camino Forma_imagen::getGcode(bool engrave, int densidad) const {
         // return Forma_compleja::vector(&img, densidad);
         return Forma_compleja::vectorCV(&img, densidad);
     }
+}
+
+QJsonObject Forma_imagen::save() const {
+    QJsonObject forma;
+    forma["tipo"] = "img";
+    forma["x"] = _x;
+    forma["y"] = _y;
+    forma["alto"] = _alto;
+    forma["largo"] = _largo;
+    forma["fijo"] = _fixed;
+    forma["ruta"] = _ruta;
+
+    return forma;
 }
 void Forma_imagen::setX(float x) {
     if (_fixed) return;

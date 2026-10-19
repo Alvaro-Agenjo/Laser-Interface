@@ -23,9 +23,12 @@ public:
     QGraphicsItem* getRender() const override { return _render; }
     Camino getGcode(bool engrave, int densidad) const override;
 
+    QJsonObject save() const override;
+
 protected:
     QGraphicsPixmapItem *_render;
     QPixmap _raw_pixmap, _original_pixmap, _pixmap;
+    QString _ruta;
 };
 
 #endif // FORMA_IMAGEN_H
