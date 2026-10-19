@@ -6,6 +6,7 @@ QString *GCodeGenerator::GenerateGcode(std::vector<Proceso *> lista) {
     _gcode.clear();
     QString cuerpo;
     for (const auto *p : lista) {
+        if (!p->getVisible()) continue;
         int velocidad = p->getVelocidad();
         int pasadas = p->getPasadas();
         int potencia = p->getPotencia();

@@ -35,6 +35,11 @@ Proceso::Proceso(int num, Factoria::Plano tipo, QString name, float x, float y)
 
 Proceso::~Proceso() { delete _objeto; }
 
+void Proceso::setVisible(bool visible) {
+    _visible = visible;
+    _objeto->getRender()->setVisible(_visible);
+}
+
 void Proceso::updateGraphics() {
     if (_objeto)
         _objeto->setGraphics(*_modo);
@@ -76,7 +81,21 @@ void Proceso::load(QJsonObject proceso) {
         _objeto->setY(forma["y"].toDouble());
 
         _objeto->setLock(forma["fijo"].toBool());
+    } else if (forma["tipo"].toString() == "img" || forma["tipo"].toString() == "png") {
+        _objeto = Factoria::crearForma((forma["tipo"].toString() == "img") ? Factoria::Plano::IMG
+                                                                           : Factoria::Plano::PNG,
+                                       forma["ruta"].toString());
+        _objeto->setX(forma["x"].toDouble());
+        _objeto->setY(forma["y"].toDouble());
+        _objeto->setLargo(forma["largo"].toDouble());
+        _objeto->setAlto(forma["alto"].toDouble());
+
+        _objeto->setLock(forma["fijo"].toBool());
     }
+
+    // Visivilidad
+    setVisible(_visible);
+
 
     // Operacion
     QJsonObject operacion = proceso["operacion"].toObject();
@@ -107,5 +126,4 @@ void Proceso::load(QJsonObject proceso) {
     _modo->setContraste(operacion["contraste"].toInt());
     _modo->setLvlgris(operacion["lvl"].toInt());
     _modo->setDensidad(operacion["densidad"].toInt());
-
 }

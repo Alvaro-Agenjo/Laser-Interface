@@ -23,7 +23,7 @@ public:
 
     inline void setObjeto(Forma* objeto)  { _objeto = objeto; }
     inline void setOperacion(Operacion operacion) {_modo = &operacion;}
-    inline void setVisible(bool visible) { _visible = visible; }
+    void setVisible(bool visible);
     inline void toggleVisible() { _visible = !_visible; }
 
     inline QString getProcessName() const { return _nombre; };
