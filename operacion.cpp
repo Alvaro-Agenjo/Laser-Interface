@@ -65,12 +65,16 @@ QJsonObject Operacion::save() const {
     switch (_flip) {
     case flip::NO_FLIP:
         operacion["simetria"] = "none";
+        break;
     case flip::VERTICAL:
         operacion["simetria"] = "vertical";
+        break;
     case flip::HORIZONTAL:
         operacion["simetria"] = "horizontal";
+        break;
     case flip::BOTH:
         operacion["simetria"] = "ambos";
+        break;
     }
 
     switch (_modo) {
@@ -90,6 +94,5 @@ QJsonObject Operacion::save() const {
         operacion["modo"] = "vector";
         operacion["umbral"] = _umbral;
         return operacion;
-
     }
 }

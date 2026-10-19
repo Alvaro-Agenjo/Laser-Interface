@@ -3,6 +3,8 @@
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QTextDocument>
+#include <QJsonObject>
+
 void exportPixelsToCSV(const QImage &image, const QString &filename);
 
 Forma_texto::Forma_texto(QString texto) : Forma_texto(texto, 0, 0) {}
@@ -86,6 +88,9 @@ Camino Forma_texto::getGcode(bool engrave, int densidad) const {
     if (engrave) return Forma_compleja::raster(&img, densidad);
     return Forma_compleja::vectorCV(&img, densidad);
 }
+
+QJsonObject Forma_texto::save() const { return QJsonObject();}
+
 void Forma_texto::setX(float x) {
     if (_fixed) return;
     _x = x;

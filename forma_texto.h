@@ -42,6 +42,8 @@ public:
     QGraphicsItem *getRender() const override { return _render; }
     Camino getGcode(bool engrave, int densidad) const override;
 
+    QJsonObject save() const override;
+
 private:
     QGraphicsTextItem *_render;
     QString _texto = "Ag WINS";

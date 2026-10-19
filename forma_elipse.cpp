@@ -77,21 +77,24 @@ void Forma_elipse::setGraphics(Operacion operacion) {
 
 Camino Forma_elipse::getGcode(bool engrave, int densidad) const {
     Camino camino;
+
+    float r1 = _largo / 2.0;
+    float r2 = _alto / 2.0;
     if (engrave) {
 
         // (x - esquinaX - r1)^2/r1^2 + (y - esquinay - r2)^2/r2^2 = 1;
         // x = esquinax + r1 +- sqrt(r1^2 - ((y - esquinay - r2)^2 * r1^2/r2^2)));
         float paso = 1.0 / (float) densidad;
-        int max_linea = std::round(_alto * 2 * densidad);
+        int max_linea = std::round(_alto * densidad);
         for (int n = 0; n < max_linea + 1; n++) {
             float y = _y + (n * paso);
 
             float x1, x2, raiz, parentesis;
-            parentesis = y - _y - _alto;
-            raiz = sqrt(pow(_largo, 2) - (pow(parentesis, 2) * pow(_largo, 2) / pow(_alto, 2)));
+            parentesis = y - _y - r2;
+            raiz = sqrt(pow(r1, 2) - (pow(parentesis, 2) * pow(r1, 2) / pow(r2, 2)));
 
-            x1 = _x + _largo + raiz;
-            x2 = _x + _largo - raiz;
+            x1 = _x + r1 - raiz;
+            x2 = _x + r1 + raiz;
             if (n % 2) {
                 camino.append({{x2, y}, 0});
                 camino.append({{x1, y}, 255});
@@ -106,18 +109,18 @@ Camino Forma_elipse::getGcode(bool engrave, int densidad) const {
 
         densidad = 10;
         float paso = 1.0 / (float) densidad;
-        int max_linea = std::round(_alto * 2 * densidad);
+        int max_linea = std::round(_alto * densidad);
 
         Camino c2;
         for (int n = 0; n < max_linea + 1; n++) {
             float y = _y + (n * paso);
 
             float x1, x2, raiz, parentesis;
-            parentesis = y - _y - _alto;
-            raiz = sqrt(pow(_largo, 2) - (pow(parentesis, 2) * pow(_largo, 2) / pow(_alto, 2)));
+            parentesis = y - _y - r2;
+            raiz = sqrt(pow(r1, 2) - (pow(parentesis, 2) * pow(r1, 2) / pow(r2, 2)));
 
-            x1 = _x + _largo + raiz;
-            x2 = _x + _largo - raiz;
+            x1 = _x + r1 - raiz;
+            x2 = _x + r1 + raiz;
 
             camino.push_back({{x1, y}, 255});
             c2.push_front({{x2, y}, 255});
